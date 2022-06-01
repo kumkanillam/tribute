@@ -8,16 +8,31 @@ class TributeRange {
     }
 
     getDocument() {
-        let iframe
-        if (this.tribute.current.collection) {
-            iframe = this.tribute.current.collection.iframe
+        const {tribute: {current: {element: {ownerDocument}}}} = this
+
+        if (ownerDocument) {
+            return ownerDocument;
+        }
+        return document;
+    }
+
+    getWindowSelection() {
+        let ownerWindow = this.getWindow();
+
+        return ownerWindow.getSelection();
+    }
+
+    getWindow() {
+        let doc = this.getDocument();
+        let ownerWindow = (doc.defaultView) ?
+          doc.defaultView :
+          doc.parentWindow;
+
+        if (ownerWindow) {
+            return ownerWindow;
         }
 
-        if (!iframe) {
-            return document
-        }
-
-        return iframe.contentWindow.document
+        return window;
     }
 
     positionMenuAtCaret(scrollTo) {
@@ -176,15 +191,6 @@ class TributeRange {
             sel.removeAllRanges()
             sel.addRange(range)
         }
-    }
-
-    getWindowSelection() {
-        const {tribute: {current: {element: {ownerDocument}}}} = this
-        if (ownerDocument) {
-            return ownerDocument.getSelection()
-        }
-
-        return window.getSelection()
     }
 
     getNodePositionInParent(element) {

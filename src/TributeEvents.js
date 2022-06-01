@@ -337,7 +337,7 @@ class TributeEvents {
     let height = elem.getBoundingClientRect().height;
 
     if (includeMargin) {
-      let style = elem.currentStyle || window.getComputedStyle(elem);
+      let style = elem.currentStyle || this.getWindowSelection().getComputedStyle(elem);
       return (
         height + parseFloat(style.marginTop) + parseFloat(style.marginBottom)
       );
